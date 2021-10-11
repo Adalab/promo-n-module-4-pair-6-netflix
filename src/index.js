@@ -1,5 +1,6 @@
 const express = require('express');
 const cors = require('cors');
+const data = require('./data/data.json');
 
 // create and config server
 const server = express();
@@ -13,6 +14,11 @@ server.listen(serverPort, () => {
 });
 
 
-server.get('/', (req, res) => {
-  res.send('Ahora si funciona')
+server.get('/movies', (req, res) => {
+  if (!data) {
+    res.sendStatus('Error 404');
+  }
+  else {
+    res.json(data);
+  }
 })
