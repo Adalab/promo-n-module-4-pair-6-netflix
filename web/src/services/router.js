@@ -9,18 +9,18 @@ del window.location https://developer.mozilla.org/es/docs/Web/API/Window/locatio
 
 */
 const redirect = path => {
-    // cambiar la ruta actual
-    window.location.replace(`#${path}`);
+  // cambiar la ruta actual
+  window.location.replace(`#${path}`);
 };
 
 const reload = path => {
-    // refrescar la página
-    window.location.reload();
+  // refrescar la página
+  window.location.reload();
 };
 
 const objToExport = {
-    redirect: redirect,
-    reload: reload
+  redirect: redirect,
+  reload: reload
 };
 
 export default objToExport;
