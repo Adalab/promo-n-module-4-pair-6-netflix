@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors');
-const data = require('./data/data.json');
+const data = require('./data/movies.json');
 
 // create and config server
 const server = express();
@@ -13,6 +13,8 @@ server.listen(serverPort, () => {
   console.log(`Server listening at http://localhost:${serverPort}`);
 });
 
+const staticServerPathWeb = "./src/public-react"; // En esta carpeta ponemos los ficheros estáticos
+server.use(express.static(staticServerPathWeb));
 
 server.get('/movies', (req, res) => {
   if (!data) {
@@ -22,3 +24,6 @@ server.get('/movies', (req, res) => {
     res.json(data);
   }
 })
+
+const staticServerPathWeb2 = "./src/public-movies-images"; // En esta carpeta ponemos los ficheros estáticos
+server.use(express.static(staticServerPathWeb2));
