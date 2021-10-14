@@ -8,6 +8,9 @@ const server = express();
 server.use(cors());
 server.use(express.json());
 
+//set template engine middle middlewares
+server.set('view engine', 'ejs');
+
 // init express aplication
 const serverPort = 4000;
 server.listen(serverPort, () => {
@@ -55,9 +58,21 @@ server.get('/movie/:movieId', (req, res) => {
   //req.params.movieId;
   console.log(movies);
 
-  if (movie === undefined) {
-    res.json({ error: 'movie-not-found' });
+  // response with rendered template
+  if (movie) {
+    // ensure data
+    movie.title = movie.title || '';
+    movie.year = movie.year || '';
+    movie.director = movie.director || '';
+    movie.country = movie.country || '';
+    res.render('views/movie', movie);
   } else {
-    res.json(movie);
+    res.render('views/movie');
   }
+
+  // if (movie === undefined) {
+  //   res.json({ error: 'movie-not-found' });
+  // } else {
+  //   res.json(movie);
+  // }
 });
