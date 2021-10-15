@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const movies = require('./data/movies.json');
 const users = require('./data/users.json');
+const Database = require('better-sqlite3');
 
 // create and config server
 const server = express();
@@ -20,16 +21,29 @@ server.listen(serverPort, () => {
 const staticServerPathWeb = './src/public-react'; // En esta carpeta ponemos los ficheros estáticos
 server.use(express.static(staticServerPathWeb));
 
-server.get('/movies', (req, res) => {
-  if (!movies) {
-    res.sendStatus('Error 404');
-  } else {
-    res.json(movies);
-  }
-});
-
 const staticServerPathWeb2 = './src/public-movies-images'; // En esta carpeta ponemos los ficheros estáticos
 server.use(express.static(staticServerPathWeb2));
+
+const db = new Database('./src/database.db', {
+  verbose: console.log
+});
+
+server.get('/movies', (req, res) => {
+  // if (!movies) {
+  //   res.sendStatus('Error 404');
+  // } else {
+  //   res.json(movies);
+  // }
+  // preparamos la query
+  const query = db.prepare('SELECT * FROM movies');
+  // ejecutamos la query
+  const movies = query.all();
+  // respondemos a la petición con los datos que ha devuelto la base de datos
+  console.log(movies);
+  res.json(movies);
+});
+
+
 
 server.post('/login', (req, res) => {
   const email = req.body.email;
