@@ -96,19 +96,22 @@ server.post('/sign-up', (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   const queryIsIn = db.prepare('SELECT * FROM users WHERE email = ?');
-  const resultIsIn = queryIsIn.all(email)
+  const resultIsIn = queryIsIn.get(email)
+  console.log(resultIsIn);
   if (resultIsIn !== undefined) {
+    console.log('entra por el IF');
     const response = {
       success: false,
       errorMessage: 'Usuario ya existente',
     };
     res.json(response);
   } else {
+    console.log('entra por el ELSE');
     const query = db.prepare('INSERT INTO users (email, password) VALUES (?, ?)');
     const result = query.run(req.body.email, req.body.password);
     const response = {
       success: true,
-      userId: lastInsertRowid,
+      userId: result.lastInsertRowid,
     };
     res.json(response);
   }
