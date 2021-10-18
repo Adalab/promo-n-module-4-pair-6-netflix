@@ -3,6 +3,7 @@ const cors = require('cors');
 const movies = require('./data/movies.json');
 const users = require('./data/users.json');
 const Database = require('better-sqlite3');
+// let users;
 
 // create and config server
 const server = express();
@@ -94,10 +95,9 @@ server.get('/movie/:movieId', (req, res) => {
 server.post('/sign-up', (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
-  const isIn = users.find((user) => {
-    return user.email === email && user.password === password;
-  });
-  if (isIn) {
+  const queryIsIn = db.prepare('SELECT * FROM users WHERE email = ?');
+  const resultIsIn = queryIsIn.all(email)
+  if (resultIsIn !== undefined) {
     const response = {
       success: false,
       errorMessage: 'Usuario ya existente',
