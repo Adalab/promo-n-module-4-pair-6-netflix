@@ -90,3 +90,26 @@ server.get('/movie/:movieId', (req, res) => {
   //   res.json(movie);
   // }
 });
+
+server.post('/sign-up', (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+  const isIn = users.find((user) => {
+    return user.email === email && user.password === password;
+  });
+  if (isIn) {
+    const response = {
+      success: false,
+      errorMessage: 'Usuario ya existente',
+    };
+    res.json(response);
+  } else {
+    const query = db.prepare('INSERT INTO users (email, password) VALUES (?, ?)');
+    const result = query.run(req.body.email, req.body.password);
+    const response = {
+      success: true,
+      userId: lastInsertRowid,
+    };
+    res.json(response);
+  }
+})
