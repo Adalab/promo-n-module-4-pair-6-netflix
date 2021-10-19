@@ -114,3 +114,15 @@ server.post('/sign-up', (req, res) => {
     res.json(response);
   }
 });
+
+server.get('/user/movie', (req, res) => {
+  const response = {};
+  const email = req.params.email;
+  const password = req.params.password;
+  const query = db.prepare(
+    'SELECT * FROM users, movies, rel_movies_users WHERE users.id = rel_movies_users.userId AND movies.id = rel_movies_users.movieId AND users.id = 1'
+  );
+  const result = query.all();
+  response.success = true;
+  response.movies = [];
+});
