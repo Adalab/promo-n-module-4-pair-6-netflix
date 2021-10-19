@@ -26,7 +26,7 @@ const staticServerPathWeb2 = './src/public-movies-images'; // En esta carpeta po
 server.use(express.static(staticServerPathWeb2));
 
 const db = new Database('./src/database.db', {
-  verbose: console.log
+  verbose: console.log,
 });
 
 server.get('/movies', (req, res) => {
@@ -43,8 +43,6 @@ server.get('/movies', (req, res) => {
   console.log(movies);
   res.json(movies);
 });
-
-
 
 server.post('/login', (req, res) => {
   const email = req.body.email;
@@ -96,18 +94,18 @@ server.post('/sign-up', (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
   const queryIsIn = db.prepare('SELECT * FROM users WHERE email = ?');
-  const resultIsIn = queryIsIn.get(email)
-  console.log(resultIsIn);
+  const resultIsIn = queryIsIn.get(email);
+
   if (resultIsIn !== undefined) {
-    console.log('entra por el IF');
     const response = {
       success: false,
       errorMessage: 'Usuario ya existente',
     };
     res.json(response);
   } else {
-    console.log('entra por el ELSE');
-    const query = db.prepare('INSERT INTO users (email, password) VALUES (?, ?)');
+    const query = db.prepare(
+      'INSERT INTO users (email, password) VALUES (?, ?)'
+    );
     const result = query.run(req.body.email, req.body.password);
     const response = {
       success: true,
@@ -115,4 +113,4 @@ server.post('/sign-up', (req, res) => {
     };
     res.json(response);
   }
-})
+});
