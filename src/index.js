@@ -73,9 +73,9 @@ server.get('/movie/:movieId', (req, res) => {
     movie.year = movie.year || '';
     movie.director = movie.director || '';
     movie.country = movie.country || '';
-    res.render('views/movie', movie);
+    res.render('movie', movie);
   } else {
-    res.render('views/movie');
+    res.render('movie');
   }
 });
 
