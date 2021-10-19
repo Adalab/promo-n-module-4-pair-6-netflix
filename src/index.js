@@ -3,6 +3,7 @@ const cors = require('cors');
 const movies = require('./data/movies.json');
 const users = require('./data/users.json');
 const Database = require('better-sqlite3');
+const { json } = require('express');
 // let users;
 
 // create and config server
@@ -95,7 +96,7 @@ server.post('/sign-up', (req, res) => {
     const query = db.prepare(
       'INSERT INTO users (email, password) VALUES (?, ?)'
     );
-    const result = query.run(req.body.email, req.body.password);
+    const result = query.run(email, password);
     const response = {
       success: true,
       userId: result.lastInsertRowid,
@@ -117,4 +118,6 @@ server.get('/user/movie', (req, res) => {
   const result = query.get(userId);
   response.success = true;
   response.movies = [];
+  console.log(response);
+  res.json(response);
 });
