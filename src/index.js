@@ -30,11 +30,6 @@ const db = new Database('./src/database.db', {
 });
 
 server.get('/movies', (req, res) => {
-  // if (!movies) {
-  //   res.sendStatus('Error 404');
-  // } else {
-  //   res.json(movies);
-  // }
   // preparamos la query
   const query = db.prepare('SELECT * FROM movies');
   // ejecutamos la query
@@ -82,12 +77,6 @@ server.get('/movie/:movieId', (req, res) => {
   } else {
     res.render('views/movie');
   }
-
-  // if (movie === undefined) {
-  //   res.json({ error: 'movie-not-found' });
-  // } else {
-  //   res.json(movie);
-  // }
 });
 
 server.post('/sign-up', (req, res) => {
@@ -119,10 +108,13 @@ server.get('/user/movie', (req, res) => {
   const response = {};
   const email = req.params.email;
   const password = req.params.password;
+  const queryUserId = db.prepare('SELECT id FROM users WHERE email = ?');
+  const userId = queryUserId.get(email);
+
   const query = db.prepare(
-    'SELECT * FROM users, movies, rel_movies_users WHERE users.id = rel_movies_users.userId AND movies.id = rel_movies_users.movieId AND users.id = 1'
+    'SELECT * FROM users, movies, rel_movies_users WHERE users.id = rel_movies_users.userId AND movies.id = rel_movies_users.movieId and users.id = ?'
   );
-  const result = query.all();
+  const result = query.get(userId);
   response.success = true;
   response.movies = [];
 });
